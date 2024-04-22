@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1847729781783582765}
   - component: {fileID: 1847729781783582762}
   - component: {fileID: 1847729781783582761}
-  - component: {fileID: 2181659536744107892}
+  - component: {fileID: 8430410512620486824}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelClearUI: {fileID: 0}
-  levelToUnlock: 0
+  restartSliderUI: {fileID: 0}
 --- !u!114 &1847729781783582765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,7 +91,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   crossFade: {fileID: 0}
   transitionTime: 0.5
---- !u!114 &2181659536744107892
+--- !u!114 &8430410512620486824
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -100,10 +100,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1847729781783582766}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d22d5e871a02bb44daacb77ca9dd2aa6, type: 3}
+  m_Script: {fileID: 11500000, guid: 8a0d76f1a4494904db3fff64158d1887, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerClones: []
-  spawnPoints:
-  - {fileID: 0}
-  player: {fileID: 7199804055872459070, guid: 886f049dc01244844bd47c8f5e4a8918, type: 3}
+  width: 0
+  height: 0
+  tileParent: {fileID: 0}

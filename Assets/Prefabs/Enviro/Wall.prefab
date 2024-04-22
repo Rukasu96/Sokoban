@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8420627896244908631}
   - component: {fileID: 1566101689742519399}
   - component: {fileID: 6685442780061204506}
-  - component: {fileID: 7356171170107773267}
   m_Layer: 0
   m_Name: Wall
   m_TagString: Enviro
@@ -28,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 334665099358210901}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -15.375797, y: 3.0622997, z: -5.061122}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9, y: 1, z: 0.9}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -84,16 +83,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &7356171170107773267
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 334665099358210901}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}

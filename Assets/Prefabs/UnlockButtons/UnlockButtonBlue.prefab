@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 1568395526842682884}
   - component: {fileID: 8311652788008251112}
   - component: {fileID: 4654241898386338656}
-  - component: {fileID: 6377971466544305175}
   - component: {fileID: 510107561356807125}
   m_Layer: 0
   m_Name: UnlockButtonBlue
@@ -85,19 +84,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6377971466544305175
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 697997163098591072}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.803152, y: 1.3250027, z: 0.61281747}
-  m_Center: {x: 0, y: 0.16250134, z: 0}
 --- !u!114 &510107561356807125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,4 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfec763a488058c40be702aa133227db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsInteractable: 0
+  IsMovable: 0
   keyType: 1
+  IsClicked: 0

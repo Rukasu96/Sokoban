@@ -12,7 +12,6 @@ public class Orange : MonoBehaviour
         {
             Player player = other.gameObject.GetComponent<Player>();
 
-            player.strength += strengthBonus;
             Destroy(gameObject);
         }
     }
