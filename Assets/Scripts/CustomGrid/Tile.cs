@@ -1,13 +1,11 @@
-using System.Collections;
+    using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
 public class Tile
 {
-    
-    public GridObject InteractableObject;
+    public Door door;
+    public Crate crate;
+    public IInteractable interactable;
     public Entity entity;
-    public bool IsBlocked;
-
 }

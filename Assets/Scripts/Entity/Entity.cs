@@ -1,50 +1,45 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data.Common;
 using UnityEngine;
 
-public class Entity : GridObject
+public class Entity : MonoBehaviour
 {
-    public Vector3 Direction;
+    [SerializeField] protected GridController gridController;
 
-    public float TimeToMove = 1f;
-    public bool Ismoving = false;
+    protected Vector3 movedDestination;
+    protected bool isMoving;
 
-    public bool CanMove()
+    public Vector3 MovedDestination { get => movedDestination; }
+
+    protected void Move(Vector3 destination)
     {
-        Tile tile = Actions.GetTile(this);
+        transform.DOMove(destination, 0.1f).OnComplete(() => isMoving = false);
+    }
+    protected bool CanBeMoved(Vector3 destination)
+    {
+        if(gridController.IsTileBlocked(destination))
+            return true;
 
-        if (tile == null)
-            return false;
-
-        if (tile.IsBlocked || Ismoving)
-            return false;
-
-        if(tile.InteractableObject != null && tile.InteractableObject.IsMovable)
-        {
-            return CanMoveObject(tile.InteractableObject);
-        }
-
-        return true;
+        return false;
     }
 
-    public void MakeMove(Vector3 targetPos)
+    protected bool CanMoveCrate(Vector3 destination, Vector3 crateDestination)
     {
-        Ismoving = true;
-        Actions.OnTileAction(this);
-        transform.DOMove(targetPos, 0.2f).SetEase(Ease.InOutSine).OnComplete(() => Ismoving = false);
-        
-    }
+        Crate crate = gridController.ReturnCrate(destination);
 
-    private bool CanMoveObject(GridObject movableObject)
-    {
-        Tile nextTile = Actions.GetTile(movableObject);
-        
-        if (nextTile == null || nextTile.IsBlocked)
+        if (crate == null)
             return false;
 
-        return true;
+        if (crate.CanBeMoved(crateDestination))
+            return true;
+
+        if (gridController.GetTile(crateDestination) == null)
+            return true;
+
+        if (gridController.GetTile(crateDestination).crate != null)
+            return true;
+
+        return false;
+
     }
 
 }

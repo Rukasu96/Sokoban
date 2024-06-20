@@ -1,51 +1,44 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.VersionControl;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    GameBaseState currentState;
-    public GameRunningState runningState = new GameRunningState();
-    public GamePauseState pauseState = new GamePauseState();
-    public GameFinishState finishState = new GameFinishState();
+    [SerializeField] private int[] tresholds;
+    [SerializeField] private GameObject finishPanel;
 
-    [SerializeField] private GameObject levelClearUI;
-    [SerializeField] private RestartSliderUI restartSliderUI;
+    public Player _Player;
 
-    public GameObject LevelClearUI { get => levelClearUI; }
-    public RestartSliderUI RestartSliderUI { get => restartSliderUI; }
-    public GameBaseState CurrentState { get => currentState; }
-
-    private void Start()
+    private void FinishLevel()
     {
-        currentState = runningState;
-        currentState.EnterState(this);
+        finishPanel.SetActive(true);
+        finishPanel.GetComponent<FinishLevelPanel>().PlayFinishPanel();
     }
-
-    private void Update()
+   
+    public int ReturnRating()
     {
-        currentState.UpdateState(this);
-    }
+        for (int i = 0; i < tresholds.Length; i++)
+        {
+            if (_Player.MovesCount >= tresholds[2])
+                return 1;
+            else if (_Player.MovesCount >= tresholds[1])
+                return 2;
+        }
 
-    private void CompleteLevel()
-    {
-        SwitchState(finishState);
-    }
-
-    private void SwitchState(GameBaseState state)
-    {
-        currentState = state;
-        currentState.EnterState(this);
+        return 3;
     }
 
     private void OnEnable()
     {
-        Actions.CompleteLevel += CompleteLevel;
+        ExitButton.StageFinished += FinishLevel;
     }
-
+    private void OnDestroy()
+    {
+        ExitButton.StageFinished -= FinishLevel;
+    }
 }

@@ -1,33 +1,30 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Windows;
 
 public class PlayerClone : Entity
 {
-    private void Start()
+    private void MoveClone(Vector3 playerInputValue)
     {
-        targetPos = transform.position;
-        Actions.AssignEntity(this);
-    }
-
-    public void MoveClone(Vector3 direction)
-    {
-        targetPos = transform.position - direction;
-        Direction = -direction;
-
-        if (Ismoving || !CanMove())
+        movedDestination = -playerInputValue;
+        Vector3 previousPos = transform.position;
+        Vector3 destination = transform.position - playerInputValue;
+        
+        if (CanBeMoved(destination) || CanMoveCrate(destination, destination - playerInputValue))
             return;
 
-        Actions.AssignEntity(this);
-        MakeMove(targetPos);
-        targetPos = transform.position;
-        Actions.RemoveEntity(this);
-
+        gridController.AssignEntityToTile(this, destination, previousPos);
+        Move(destination);
     }
 
     private void OnEnable()
     {
-        Actions.MoveClone += MoveClone;
+        Player.CloneMoved += MoveClone;
     }
-
+    private void OnDestroy()
+    {
+        Player.CloneMoved -= MoveClone;
+    }
 }
