@@ -1,67 +1,58 @@
 using DG.Tweening;
-using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data.Common;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Player : Entity
 {
-    private PlayerInput input = null;
+    [SerializeField] private PlayerClone[] clones;
+    public InputActionAsset input;
 
-    private int movesCount = 0;
-    public int MovesCount => movesCount;
-    public static event Action<Vector3> CloneMoved;
-
+    public static int movesCount;
     private void Awake()
     {
-        input = new PlayerInput();
+        input.FindActionMap("CharacterControls").FindAction("Movement").performed += ctx => ReadInput(ctx, ctx.ReadValue<Vector3>());
     }
 
-    private void XMakeMove(InputAction.CallbackContext value)
+    private void Start()
     {
-        if (isMoving)
-            return;
-
-        Vector3 previousPos = transform.position;
-        movedDestination = new Vector3(value.ReadValue<float>(), 0f, 0f);
-
-        Vector3 destination = previousPos + movedDestination;
-
-        if (CanBeMoved(destination) || CanMoveCrate(destination, destination + MovedDestination))
-            return;
-
-        isMoving = true;
-
-        Move(destination);
-        gridController.AssignEntityToTile(this, destination, previousPos);
-        CloneMoved?.Invoke(movedDestination);
-        movesCount++;
+        movesCount = 0;
+        targetPos = transform.position;
+        Direction = transform.position;
+        Actions.AssignEntity(this);
     }
-    private void YMakeMove(InputAction.CallbackContext value)
+
+    private void ReadInput(InputAction.CallbackContext ctx, Vector3 direction)
     {
-        if (isMoving)
-            return;
+        if (ctx.performed)
+        {
+            targetPos = transform.position + direction;
+            Direction = direction;
 
-        Vector3 previousPos = transform.position;
-        movedDestination = new Vector3(0f, value.ReadValue<float>(), 0f);
+            if (Ismoving || !CanMove())
+                return;
 
-        Vector3 destination = previousPos + movedDestination;
+            Actions.AssignEntity(this);
+            MakeMove(targetPos);
+            targetPos = transform.position;
+            Actions.RemoveEntity(this);
+            movesCount++;
 
-        if (CanBeMoved(destination) || CanMoveCrate(destination, destination + MovedDestination))
-            return;
+            if (clones.Length > 0)
+                Actions.MoveClone(direction);
 
-        isMoving = true;
-
-        Move(destination);
-        gridController.AssignEntityToTile(this, destination, previousPos);
-        CloneMoved?.Invoke(movedDestination);
-        movesCount++;
+        }
+        
     }
 
-    private void DissapearingAnim()
+    public void FinishLevelAnimation()
     {
         var sequence = DOTween.Sequence();
 
-        sequence.Append(transform.DOScale(1.2f, 0.3f));
+        sequence.Append(transform.DOScale(1.2f,0.3f));
         sequence.Append(transform.DOScale(0.1f, 0.2f));
 
         sequence.OnComplete(() => Destroy(gameObject));
@@ -70,16 +61,12 @@ public class Player : Entity
     private void OnEnable()
     {
         input.Enable();
-        input.Player.XMovement.performed += XMakeMove;
-        input.Player.YMovement.performed += YMakeMove;
-        ExitButton.StageFinished += DissapearingAnim;
+        Actions.CompleteLevel += FinishLevelAnimation;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         input.Disable();
-        input.Player.XMovement.performed -= XMakeMove;
-        input.Player.YMovement.performed -= YMakeMove;
-        ExitButton.StageFinished -= DissapearingAnim;
+        Actions.CompleteLevel -= FinishLevelAnimation;
     }
 }

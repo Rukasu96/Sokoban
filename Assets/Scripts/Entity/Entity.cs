@@ -1,45 +1,50 @@
 using DG.Tweening;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data.Common;
 using UnityEngine;
 
-public class Entity : MonoBehaviour
+public class Entity : GridObject
 {
-    [SerializeField] protected GridController gridController;
+    public Vector3 Direction;
 
-    protected Vector3 movedDestination;
-    protected bool isMoving;
+    public float TimeToMove = 1f;
+    public bool Ismoving = false;
 
-    public Vector3 MovedDestination { get => movedDestination; }
-
-    protected void Move(Vector3 destination)
+    public bool CanMove()
     {
-        transform.DOMove(destination, 0.1f).OnComplete(() => isMoving = false);
-    }
-    protected bool CanBeMoved(Vector3 destination)
-    {
-        if(gridController.IsTileBlocked(destination))
-            return true;
+        Tile tile = Actions.GetTile(this);
 
-        return false;
-    }
-
-    protected bool CanMoveCrate(Vector3 destination, Vector3 crateDestination)
-    {
-        Crate crate = gridController.ReturnCrate(destination);
-
-        if (crate == null)
+        if (tile == null)
             return false;
 
-        if (crate.CanBeMoved(crateDestination))
-            return true;
+        if (tile.IsBlocked || Ismoving)
+            return false;
 
-        if (gridController.GetTile(crateDestination) == null)
-            return true;
+        if(tile.InteractableObject != null && tile.InteractableObject.IsMovable)
+        {
+            return CanMoveObject(tile.InteractableObject);
+        }
 
-        if (gridController.GetTile(crateDestination).crate != null)
-            return true;
+        return true;
+    }
 
-        return false;
+    public void MakeMove(Vector3 targetPos)
+    {
+        Ismoving = true;
+        Actions.OnTileAction(this);
+        transform.DOMove(targetPos, 0.2f).SetEase(Ease.InOutSine).OnComplete(() => Ismoving = false);
+        
+    }
 
+    private bool CanMoveObject(GridObject movableObject)
+    {
+        Tile nextTile = Actions.GetTile(movableObject);
+        
+        if (nextTile == null || nextTile.IsBlocked)
+            return false;
+
+        return true;
     }
 
 }
